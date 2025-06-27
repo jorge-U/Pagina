@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>API de Pokémon</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: linear-gradient(to bottom, #ffe600, #ff5050);
+      color: #333;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+    .resultado {
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Consulta tu Pokémon favorito 🐱‍👤</h1>
+  <input type="text" id="pokemonInput" placeholder="Ejemplo: pikachu">
+  <button onclick="buscarPokemon()">Buscar</button>
+
+  <div class="resultado" id="resultado" style="display: none;">
+    <h2 id="nombre"></h2>
+    <p><strong>Altura:</strong> <span id="altura"></span></p>
+    <p><strong>Peso:</strong> <span id="peso"></span></p>
+    <img id="imagen" src="" alt="" style="width:150px;">
+  </div>
+
+  <script>
+    function buscarPokemon() {
+      const nombre = document.getElementById("pokemonInput").value.toLowerCase();
+      const url = `https://pokeapi.co/api/v2/pokemon/${nombre}`;
+
+      fetch(url)
+        .then(respuesta => {
+          if (!respuesta.ok) {
+            throw new Error("Pokémon no encontrado");
+          }
+          return respuesta.json();
+        })
+        .then(data => {
+          document.getElementById("nombre").textContent = data.name.toUpperCase();
+          document.getElementById("altura").textContent = data.height;
+          document.getElementById("peso").textContent = data.weight;
+          document.getElementById("imagen").src = data.sprites.front_default;
+          document.getElementById("resultado").style.display = "block";
+        })
+        .catch(error => {
+          alert(error.message);
+          document.getElementById("resultado").style.display = "none";
+        });
+    }
+  </script>
+</body>
+</html>
